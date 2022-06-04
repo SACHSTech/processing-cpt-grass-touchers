@@ -28,17 +28,21 @@ public class Sketch extends PApplet {
   public void draw() {
     background(0);
     player1();
+    player2();
   }
   
   public void player1(){
     if(keyPressed){
       if(keyCode == UP){
         player1Y--;
-      }else if(keyCode == DOWN){
+      }
+      if(keyCode == DOWN){
         player1Y ++;
-      }else if(keyCode == LEFT){
+      }
+      if(keyCode == LEFT){
         player1X --;
-      }else if(keyCode == RIGHT){
+      }
+      if(keyCode == RIGHT){
         player1X ++;
       }
     }
@@ -46,19 +50,22 @@ public class Sketch extends PApplet {
     ellipse(player1X, player1Y, playerSize, playerSize);
   }
 
-  // public void player2(){
-  //   if(keyPressed){
-  //     if(key == 'w'){
-  //       player2Y--;
-  //     }else if(key == 's'){
-  //       player2Y ++;
-  //     }else if(key == 'a'){
-  //       player2X --;
-  //     }else if(key == 'd'){
-  //       player2X ++;
-  //     }
-  //   }
-  //   fill(0, 255, 0);
-  //   ellipse(player2X, player2Y, playerSize, playerSize);
-  // }
+  public void player2(){
+    if(keyPressed){
+      if(key == 'w'){
+        player2Y--;
+      }
+      if(key == 's'){
+        player2Y ++;
+      }
+      if(key == 'a'){
+        player2X --;
+      }
+      if(key == 'd'){
+        player2X ++;w
+      }
+    }
+    fill(0, 255, 0);
+    ellipse(player2X, player2Y, playerSize, playerSize);
+  }
 }
