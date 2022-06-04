@@ -36,39 +36,40 @@ public class Sketch extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
-      background(0);
+    background(0);
   
-      if(P1upPressed){
-        player1Y--;
-      }
-      if(P1downPressed){
-        player1Y ++;
-      }
-      if(P1leftPressed){
-        player1X --;
-      }
-      if(P1rightPressed){
-        player1X ++;
-      }
-      
-      fill(255, 255, 0);
-      ellipse(player1X, player1Y, playerSize, playerSize);
-  
-      if(P2upPressed){
-        player2Y--;
-      }
-      if(P2downPressed){
-        player2Y ++;
-      }
-      if(P2leftPressed){
-        player2X --;
-      }
-      if(P2rightPressed){
-        player2X ++;
-          
-      fill(0, 255, 0);
-      ellipse(player2X, player2Y, playerSize, playerSize);
+    if(P1upPressed){
+      player1Y--;
     }
+    if(P1downPressed){
+      player1Y ++;
+    }
+    if(P1leftPressed){
+      player1X --;
+    }
+    if(P1rightPressed){
+      player1X ++;
+    }
+    
+    fill(255, 255, 0);
+    ellipse(player1X, player1Y, playerSize, playerSize);
+
+    if(P2upPressed){
+      player2Y--;
+    }
+    if(P2downPressed){
+      player2Y ++;
+    }
+    if(P2leftPressed){
+      player2X --;
+    }
+    if(P2rightPressed){
+      player2X ++;
+    }
+          
+    fill(0, 255, 0);
+    ellipse(player2X, player2Y, playerSize, playerSize);
+    
   }
   
   public void keyPressed(){
