@@ -54,6 +54,18 @@ public class Sketch extends PApplet {
     fill(255, 255, 0);
     ellipse(player1X, player1Y, playerSize, playerSize);
 
+    if(player1X <= -10){
+      player1X = width + 10;
+    }else if(player1X >= width + 10){
+      player1X = -10;
+    }
+
+    if(player2X <= -10){
+      player2X = width + 10;
+    }else if(player2X >= width + 10){
+      player2X = -10;
+    }
+
     if(P2upPressed){
       player2Y--;
     }
