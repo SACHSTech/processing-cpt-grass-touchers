@@ -16,6 +16,8 @@ public class Sketch extends PApplet {
   float player2X = 210;
   float player2Y = 500;
   float playerSize = 20;
+
+  int[][] intlevel;
 	
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -23,6 +25,7 @@ public class Sketch extends PApplet {
  public void settings() {
 	// put your size call here
     size(400, 600);
+    intlevel = new int[20][30];
   }
 
   /** 
