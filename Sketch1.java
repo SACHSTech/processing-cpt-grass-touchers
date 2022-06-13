@@ -16,7 +16,7 @@ public class Sketch1 extends PApplet {
 
   float fltPacmanX = 200;
   float fltPacmanY = 200;
-  
+  int score = 0;
 
   PImage pacmanspritesheet;
   PImage pacman_walkingsheet;
@@ -40,7 +40,6 @@ public class Sketch1 extends PApplet {
 
   int pelletX = 0;
   int pelletY = 0;
-
   float player1X = 190;
   float player1Y = 500;
   float player2X = 210;
@@ -108,8 +107,11 @@ public class Sketch1 extends PApplet {
 
     // score system
     
+    fill(250);
+    text("Score: ", 10, 10);
 
     if (player1X > pelletX - 15 && player1X < pelletX + 15 && player1Y > pelletY - 15 && player1Y < pelletY + 15){
+    score += 100;
     }
   }
 }
