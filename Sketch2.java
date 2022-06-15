@@ -12,8 +12,8 @@ public class Sketch2 extends PApplet {
   int playerSize = 20;
   float player1X = playerSize * 8 + playerSize / 2;
   float player1Y = playerSize * 23 + playerSize / 2;
-  int ghostX = playerSize * 11 + playerSize / 2;
-  int ghostY = playerSize * 23 + playerSize / 2;
+  float ghostX = playerSize * 11 + playerSize / 2;
+  float ghostY = playerSize * 23 + playerSize / 2;
 
   int gridX = 20;
   int gridY = 30;
@@ -26,19 +26,17 @@ public class Sketch2 extends PApplet {
 
   int timer = 0;
   boolean ghostWhite;
-  int whiteTimer = 350;
+  int whiteTimer = 400;
 
   PImage imgCherry;
-
-  
-
+  int lifeCount = 3;
   
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
     // put your size call here
-    size(400, 600);
+    size(400, 700);
     intlevel = arrayValues();
     ghostWhite = false;
   }
@@ -61,6 +59,8 @@ public class Sketch2 extends PApplet {
     drawBoard();
     player1();
     ghost();
+    playerCollision();
+    lifeDisplay();
   }
   
   public void keyPressed(){
@@ -98,7 +98,7 @@ public class Sketch2 extends PApplet {
       intlevel[23][9] = 0;
       intlevel[23][10] = 0;
     }else if(timer == 800){
-      intlevel[23][9] = 6;
+      intlevel[23][9] = 4;
     }else if(timer == 1400){
       intlevel[23][9] = 0;
     }
@@ -122,18 +122,12 @@ public class Sketch2 extends PApplet {
           fill(255, 255, 255);
           ellipse(x * playerSize + playerSize / 2, y * playerSize + playerSize / 2, 10, 10);
         } else if (code == 4) {
-          //portal 1
-        } else if (code == 5) {
-          //portal 2
-        }
-        else if(code == 6) {
-          // fill(255, 75, 0);
-          // ellipse(x * playerSize + playerSize / 2, y * playerSize + playerSize / 2, 10, 10);
+          //bonus cherry
           image(imgCherry, x * playerSize + playerSize / 2, y * playerSize + playerSize / 2, 10, 10);
-        }
       }
     }
   }
+}
   
   public int[][] arrayValues() {
     return new int[][] {
@@ -172,7 +166,7 @@ public class Sketch2 extends PApplet {
   public void player1(){
     int player1GridX = (int)player1X / playerSize;
     int player1GridY = (int)player1Y / playerSize;
-    if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3 || intlevel[player1GridY][player1GridX] == 6){
+    if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3 || intlevel[player1GridY][player1GridX] == 4){
       if(intlevel[player1GridY][player1GridX] == 3){
         ghostWhite = true;
       }
@@ -229,6 +223,7 @@ public class Sketch2 extends PApplet {
         nextX++;
       }
 
+      //wall collision
       code = intlevel[nextY][nextX];
       if (code == 1) {
         // A wall.
@@ -261,12 +256,12 @@ public class Sketch2 extends PApplet {
   }
 
   public void ghost(){
-    int ghostGridX = ghostX / playerSize;
-    int ghostGridY = ghostY / playerSize;
+    int ghostGridX = (int)ghostX / playerSize;
+    int ghostGridY = (int)ghostY / playerSize;
 
     // Only check if the direction can be changed if the player is close enough to the center of a cell.
-    int ghostXRem = ghostX % playerSize;
-    int ghostYRem = ghostY % playerSize;
+    int ghostXRem = (int)ghostX % playerSize;
+    int ghostYRem = (int)ghostY % playerSize;
     int nextX;
     int nextY;
     int code;
@@ -339,7 +334,7 @@ public class Sketch2 extends PApplet {
       // System.out.println(whiteTimer);
       if(whiteTimer == 0){
         ghostWhite = false;
-        whiteTimer = 350;
+        whiteTimer = 400;
       }
     }
     
@@ -357,7 +352,47 @@ public class Sketch2 extends PApplet {
       ghostX = -10;
     }
   }
-  public void mouseDragged(){
-    ghostWhite = true;
+  public void playerCollision(){
+    int playersDistanceX = (int)player1X - (int)ghostX;
+    int playersDistanceY = (int)player1Y - (int)ghostY;
+    if(playersDistanceX >= -5 && playersDistanceX <= 5 && playersDistanceY >= -5 && playersDistanceY <= 5 && ghostWhite == true){
+      ghostX = playerSize * 11 + playerSize / 2;
+      ghostY = playerSize * 23 + playerSize / 2;
+      ghostWhite = false;
+    }else if(playersDistanceX >= -5 && playersDistanceX <= 5 && playersDistanceY >= -5 && playersDistanceY <= 5 && ghostWhite == false){
+      player1X = playerSize * 8 + playerSize / 2;
+      player1Y = playerSize * 23 + playerSize / 2;
+      ghostX = playerSize * 11 + playerSize / 2;
+      ghostY = playerSize * 23 + playerSize / 2;
+      timer = 0;
+      intlevel[23][9] = 1;
+      intlevel[23][10] = 1;
+      lifeCount--;
+      System.out.println(lifeCount);
+      ghostWhite = false;
+    }
+  }
+  public void lifeDisplay(){
+     String lives = ("Lives");
+    fill(255);
+    textSize(20);
+    text(lives, 35, 625);
+    if(lifeCount == 3){
+      fill(255, 255, 0);
+      ellipse(45, 640, 20, 20);
+      ellipse(65, 640, 20, 20);
+      ellipse(85, 640, 20, 20);
+    }else if(lifeCount == 2){
+      fill(255, 255, 0);
+      ellipse(45, 640, 20, 20);
+      ellipse(65, 640, 20, 20);
+    }else if(lifeCount == 1){
+        fill(255, 255, 0);
+       ellipse(45, 640, 20, 20);
+    }else if(lifeCount == 0){
+        fill(0);
+        ellipse(45, 640, 20, 20);
+    }
   }
 }
+
