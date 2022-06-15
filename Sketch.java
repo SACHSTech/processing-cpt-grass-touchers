@@ -17,7 +17,8 @@ public class Sketch extends PApplet {
   float player2Y = 500;
   float playerSize = 20;
 
-  int[][] intlevel;
+  int pelletX = 0;
+  int pelletY = 0;
 	
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -141,6 +142,10 @@ public class Sketch extends PApplet {
     }
     if(key == 'd'){
       P2rightPressed = false;
+    }
+
+    // score system
+    if (player1X > pelletX - 15 && player1X < pelletX + 15 && player1Y > pelletY - 15 && player1Y < pelletY + 15){
     }
   }   
 }

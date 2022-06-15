@@ -59,10 +59,19 @@ public class Sketch2 extends PApplet {
     background(0);
     drawBoard();
     player1();
+<<<<<<< HEAD
     ghost();
     playerCollision();
     lifeDisplay();
     winScreens();
+=======
+    player2();
+    //ghost();
+
+    fill(250);
+    text("Score: ", 10, 15);
+    
+>>>>>>> origin/main
   }
   
   public void keyPressed(){
@@ -408,7 +417,7 @@ public class Sketch2 extends PApplet {
     }else if(lifeCount <= 0){
       fill(255, 0, 0);
       textSize(15);
-      text(ghostWin, 130, 615);
+      text(ghostWin, 130, 615); 
     }
   }
 }
