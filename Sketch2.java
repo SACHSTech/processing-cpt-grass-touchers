@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 /**
 * Descriptions
@@ -9,10 +10,10 @@ import processing.core.PApplet;
 public class Sketch2 extends PApplet {
   
   int playerSize = 20;
-  int player1X = playerSize * 9 + playerSize / 2;
-  int player1Y = playerSize * 23 + playerSize / 2;
-  int player2X = playerSize * 10 + playerSize / 2;
-  int player2Y = playerSize * 23 + playerSize / 2;
+  float player1X = playerSize * 8 + playerSize / 2;
+  float player1Y = playerSize * 23 + playerSize / 2;
+  float ghostX = playerSize * 11 + playerSize / 2;
+  float ghostY = playerSize * 23 + playerSize / 2;
 
   int gridX = 20;
   int gridY = 30;
@@ -20,19 +21,24 @@ public class Sketch2 extends PApplet {
   
   int player1Direction = 0;
   int player1NextDirection = 0;
-  char player2Direction = ' ';
-  char player2NextDirection = ' ';
+  char ghostDirection = ' ';
+  char ghostNextDirection = ' ';
 
   int timer = 0;
+  boolean ghostWhite;
+  int whiteTimer = 400;
 
+  PImage imgCherry;
+  int lifeCount = 3;
   
   /**
    * Called once at the beginning of execution, put your size all in this method
    */
   public void settings() {
     // put your size call here
-    size(400, 600);
+    size(400, 700);
     intlevel = arrayValues();
+    ghostWhite = false;
   }
 
   /** 
@@ -40,6 +46,7 @@ public class Sketch2 extends PApplet {
    * values here i.e background, stroke, fill etc.
    */
   public void setup() {
+    imgCherry = loadImage("kisspng-pac-man-cherry-post-it-note-t-shirt-sticker-pacman-cherry-png-5ab14380c31e67.9789147315215665927992.png");
   }
 
   /**
@@ -47,7 +54,7 @@ public class Sketch2 extends PApplet {
    */
   public void draw() {
     timer ++;
-    System.out.println(timer);
+    //System.out.println(timer);
     background(0);
     drawBoard();
     player1();
@@ -74,21 +81,31 @@ public class Sketch2 extends PApplet {
       }
     }
     if(key == 'w' || key == 'a' || key == 's' || key == 'd') {
-      player2NextDirection = key;
+      ghostNextDirection = key;
       // Check if the next direction is the opposite of the current
       // direction. If so, we can change the current direction immediately.
       if (
-        (player2Direction == 'w' && player2NextDirection == 's') ||
-        (player2Direction == 's' && player2NextDirection == 'w') ||
-        (player2Direction == 'a' && player2NextDirection == 'd') ||
-        (player2Direction == 'd' && player2NextDirection == 'a')
+        (ghostDirection == 'w' && ghostNextDirection == 's') ||
+        (ghostDirection == 's' && ghostNextDirection == 'w') ||
+        (ghostDirection == 'a' && ghostNextDirection == 'd') ||
+        (ghostDirection == 'd' && ghostNextDirection == 'a')
       ) {
-        player2Direction = player2NextDirection;
+        ghostDirection = ghostNextDirection;
       }
     }
   }
   
   public void drawBoard() {
+    //spawns bonus fruit after specific amount of time
+    if(timer == 300){
+      intlevel[23][9] = 0;
+      intlevel[23][10] = 0;
+    }else if(timer == 800){
+      intlevel[23][9] = 4;
+    }else if(timer == 1400){
+      intlevel[23][9] = 0;
+    }
+
     for (int y = 0; y < intlevel.length; y++) {
       for (int x = 0; x < intlevel[0].length; x++) {
         int code = intlevel[y][x];
@@ -108,23 +125,12 @@ public class Sketch2 extends PApplet {
           fill(255, 255, 255);
           ellipse(x * playerSize + playerSize / 2, y * playerSize + playerSize / 2, 10, 10);
         } else if (code == 4) {
-          //portal 1
-        } else if (code == 5) {
-          //portal 2
-        }
-        else if(code == 6) {
-          fill(255, 75, 0);
-          ellipse(x * playerSize + playerSize / 2, y * playerSize + playerSize / 2, 10, 10);
-        }
-        //spawns bonus fruit after specific amount of time
-        if(timer >= 800 && timer <= 801){
-          intlevel[23][9] = 6;
-        }else if(timer>= 1200){
-          intlevel[23][9] = 0;
-        }
+          //bonus cherry
+          image(imgCherry, x * playerSize + playerSize / 2, y * playerSize + playerSize / 2, 10, 10);
       }
     }
   }
+}
   
   public int[][] arrayValues() {
     return new int[][] {
@@ -151,7 +157,7 @@ public class Sketch2 extends PApplet {
       {1,1,1,2,1,2,1,1,1,1,1,1,1,1,2,1,2,1,1,1},
       {1,1,1,2,1,2,1,1,1,1,1,1,1,1,2,1,2,1,1,1},
       {1,1,1,2,1,2,2,2,2,1,1,2,2,2,2,1,2,1,1,1},
-      {1,1,1,2,1,2,1,1,2,0,0,2,1,1,2,1,2,1,1,1},
+      {1,1,1,2,1,2,1,1,0,1,1,0,1,1,2,1,2,1,1,1},
       {1,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,1},
       {1,2,1,1,1,2,1,1,1,1,1,1,1,1,2,1,1,1,2,1},
       {1,2,1,1,1,2,1,1,2,2,2,2,1,1,2,1,1,1,2,1},
@@ -161,16 +167,20 @@ public class Sketch2 extends PApplet {
     };
   }
   public void player1(){
-    int player1GridX = player1X / playerSize;
-    int player1GridY = player1Y / playerSize;
-    if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3 || intlevel[player1GridY][player1GridX] == 6){
+    int player1GridX = (int)player1X / playerSize;
+    int player1GridY = (int)player1Y / playerSize;
+    if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3 || intlevel[player1GridY][player1GridX] == 4){
+      if(intlevel[player1GridY][player1GridX] == 3){
+        ghostWhite = true;
+      }
+      
       //TODO add to player score
       intlevel[player1GridY][player1GridX] = 0;
     }
-
+    
     // Only check if the direction can be changed if the player is close enough to the center of a cell.
-    int player1XRem = player1X % playerSize;
-    int player1YRem = player1Y % playerSize;
+    int player1XRem = (int)player1X % playerSize;
+    int player1YRem = (int)player1Y % playerSize;
     int nextX;
     int nextY;
     int code;
@@ -187,13 +197,13 @@ public class Sketch2 extends PApplet {
         nextX = player1GridX;
         nextY = player1GridY;
         if (player1NextDirection == UP) {
-          nextY--;
+          nextY-=0.9;
         } else if (player1NextDirection == DOWN) {
-          nextY++;
+          nextY+=0.9;
         } else if (player1NextDirection == LEFT) {
-          nextX--;
+          nextX-=0.9;
         } else if (player1NextDirection == RIGHT) {
-          nextX++;
+          nextX+=0.9;
         }
 
         code = intlevel[nextY][nextX];
@@ -216,6 +226,7 @@ public class Sketch2 extends PApplet {
         nextX++;
       }
 
+      //wall collision
       code = intlevel[nextY][nextX];
       if (code == 1) {
         // A wall.
@@ -247,97 +258,142 @@ public class Sketch2 extends PApplet {
     }
   }
 
-  public void player2(){
-    int player2GridX = player2X / playerSize;
-    int player2GridY = player2Y / playerSize;
-    if(intlevel[player2GridY][player2GridX] == 2 || intlevel[player2GridY][player2GridX] == 3 || intlevel[player2GridY][player2GridX] == 6){
-      //TODO add to player score
-      intlevel[player2GridY][player2GridX] = 0;
-    }
+  public void ghost(){
+    int ghostGridX = (int)ghostX / playerSize;
+    int ghostGridY = (int)ghostY / playerSize;
 
     // Only check if the direction can be changed if the player is close enough to the center of a cell.
-    int player2XRem = player2X % playerSize;
-    int player2YRem = player2Y % playerSize;
+    int ghostXRem = (int)ghostX % playerSize;
+    int ghostYRem = (int)ghostY % playerSize;
     int nextX;
     int nextY;
     int code;
-    if (player2XRem == 10 && player2YRem == 10) {
+    if (ghostXRem == 10 && ghostYRem == 10) {
       // TODO Can also check here if a pellet is available.
       // TODO Portal handling
 
-      if (player2NextDirection != ' ') {
+      if (ghostNextDirection != ' ') {
         // Draw a box around the current player 2 cell.
         stroke(255);
         fill(0);
-        rect(player2GridX * playerSize, player2GridY * playerSize, playerSize, playerSize);
+        rect(ghostGridX * playerSize, ghostGridY * playerSize, playerSize, playerSize);
         stroke(0);
 
-        nextX = player2GridX;
-        nextY = player2GridY;
-        if (player2NextDirection == 'w') {
+        nextX = ghostGridX;
+        nextY = ghostGridY;
+        if (ghostNextDirection == 'w') {
           nextY--;
-        } else if (player2NextDirection == 's') {
+        } else if (ghostNextDirection == 's') {
           nextY++;
-        } else if (player2NextDirection == 'a') {
+        } else if (ghostNextDirection == 'a') {
           nextX--;
-        } else if (player2NextDirection == 'd') {
+        } else if (ghostNextDirection == 'd') {
           nextX++;
         }
 
         code = intlevel[nextY][nextX];
         if (code != 1) {
           // Not a wall.
-          player2Direction = player2NextDirection;
+          ghostDirection = ghostNextDirection;
         }
       }
 
       // Check if there is a wall in the player's way.
-      nextX = player2GridX;
-      nextY = player2GridY;
-      if (player2Direction == 'w') {
+      nextX = ghostGridX;
+      nextY = ghostGridY;
+      if (ghostDirection == 'w') {
         nextY--;
-      } else if (player2Direction == 's') {
+      } else if (ghostDirection == 's') {
         nextY++;
-      } else if (player2Direction == 'a') {
+      } else if (ghostDirection == 'a') {
         nextX--;
-      } else if (player2Direction == 'd') {
+      } else if (ghostDirection == 'd') {
         nextX++;
       }
 
       code = intlevel[nextY][nextX];
       if (code == 1) {
         // A wall.
-        player2Direction = ' ';
+        ghostDirection = ' ';
       }
     }
         
-    if (player2Direction != ' ') {
+    if (ghostDirection != ' ') {
       // Update the player position according to the direction.
-      if (player2Direction == 'w') {
-        player2Y--;
-      } else if (player2Direction == 's') {
-        player2Y++;
-      } else if (player2Direction == 'a') {
-        player2X--;
-      } else if (player2Direction == 'd') {
-        player2X++;
+      if(ghostDirection == 'w') {
+        ghostY-= 1;
+      } else if (ghostDirection == 's') {
+        ghostY+= 1;
+      } else if (ghostDirection == 'a') {
+        ghostX-= 1;
+      } else if (ghostDirection == 'd') {
+        ghostX+= 1;
+      }
+    }
+
+    //tracks how long a ghost is edible for
+    if(ghostWhite){
+      whiteTimer--;
+      if(whiteTimer == 0){
+        ghostWhite = false;
+        whiteTimer = 400;
       }
     }
     
-    
-    fill(0, 255, 0);
-    ellipse(player2X, player2Y, 20, 20);
+    if(ghostWhite == true){
+      fill(255);
+      ellipse(ghostX, ghostY, 20, 20);
+    }else{
+      fill(255, 0, 0);
+      ellipse(ghostX, ghostY, 20, 20);
+    }
 
-    if(player2X <= -10){
-      player2X = width + 10;
-    }else if(player2X >= width + 10){
-      player2X = -10;
+    if(ghostX <= -10){
+      ghostX = width + 10;
+    }else if(ghostX >= width + 10){
+      ghostX = -10;
     }
   }
-  public void ghost(){
-    int ghostX = 200;
-    int ghostY = 80;
-    fill(255, 0, 0);
-    rect(ghostX, ghostY, playerSize, playerSize);
+  public void playerCollision(){
+    int playersDistanceX = (int)player1X - (int)ghostX;
+    int playersDistanceY = (int)player1Y - (int)ghostY;
+    if(playersDistanceX >= -15 && playersDistanceX <= 15 && playersDistanceY >= -15 && playersDistanceY <= 15 && ghostWhite == true){
+      ghostX = playerSize * 11 + playerSize / 2;
+      ghostY = playerSize * 23 + playerSize / 2;
+      ghostWhite = false;
+    }else if(playersDistanceX >= -15 && playersDistanceX <= 15 && playersDistanceY >= -15 && playersDistanceY <= 15 && ghostWhite == false){
+      player1X = playerSize * 8 + playerSize / 2;
+      player1Y = playerSize * 23 + playerSize / 2;
+      ghostX = playerSize * 11 + playerSize / 2;
+      ghostY = playerSize * 23 + playerSize / 2;
+      timer = 0;
+      intlevel[23][9] = 1;
+      intlevel[23][10] = 1;
+      lifeCount--;
+      ghostWhite = false;
+    }
+  }
+  public void lifeDisplay(){
+     String lives = ("Lives");
+    fill(255);
+    textSize(20);
+    text(lives, 35, 625);
+    if(lifeCount == 3){
+      fill(255, 255, 0);
+      ellipse(45, 640, 20, 20);
+      ellipse(65, 640, 20, 20);
+      ellipse(85, 640, 20, 20);
+    }else if(lifeCount == 2){
+      fill(255, 255, 0);
+      ellipse(45, 640, 20, 20);
+      ellipse(65, 640, 20, 20);
+    }else if(lifeCount == 1){
+        fill(255, 255, 0);
+       ellipse(45, 640, 20, 20);
+    }else if(lifeCount == 0){
+        fill(0);
+        ellipse(45, 640, 20, 20);
+    }
   }
 }
+
