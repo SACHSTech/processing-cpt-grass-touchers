@@ -59,19 +59,14 @@ public class Sketch2 extends PApplet {
     background(0);
     drawBoard();
     player1();
-<<<<<<< HEAD
     ghost();
     playerCollision();
     lifeDisplay();
     winScreens();
-=======
     player2();
-    //ghost();
 
     fill(250);
     text("Score: ", 10, 15);
-    
->>>>>>> origin/main
   }
   
   public void keyPressed(){
