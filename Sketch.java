@@ -1,4 +1,5 @@
 import processing.core.PApplet;
+import processing.core.PImage;
 
 public class Sketch extends PApplet {
 int playerSize = 20;
@@ -55,7 +56,6 @@ int playerSize = 20;
     playerCollision();
     lifeDisplay();
     winScreens();
-    player2();
 
     fill(250);
     text("Score: ", 10, 15);
