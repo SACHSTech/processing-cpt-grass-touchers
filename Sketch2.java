@@ -26,10 +26,11 @@ public class Sketch2 extends PApplet {
 
   int timer = 0;
   boolean ghostWhite;
-  int whiteTimer = 400;
+  int whiteTimer = 500;
 
   PImage imgCherry;
   int lifeCount = 3;
+  int pelletsEaten = 0;
   
   /**
    * Called once at the beginning of execution, put your size all in this method
@@ -61,6 +62,7 @@ public class Sketch2 extends PApplet {
     ghost();
     playerCollision();
     lifeDisplay();
+    winScreens();
   }
   
   public void keyPressed(){
@@ -167,6 +169,10 @@ public class Sketch2 extends PApplet {
     int player1GridX = (int)player1X / playerSize;
     int player1GridY = (int)player1Y / playerSize;
     if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3 || intlevel[player1GridY][player1GridX] == 4){
+      if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3){
+        pelletsEaten++;
+        System.out.println(pelletsEaten);
+      }
       if(intlevel[player1GridY][player1GridX] == 3){
         ghostWhite = true;
       }
@@ -333,7 +339,7 @@ public class Sketch2 extends PApplet {
       whiteTimer--;
       if(whiteTimer == 0){
         ghostWhite = false;
-        whiteTimer = 400;
+        whiteTimer = 500;
       }
     }
     
@@ -390,6 +396,19 @@ public class Sketch2 extends PApplet {
     }else if(lifeCount == 0){
         fill(0);
         ellipse(45, 640, 20, 20);
+    }
+  }
+  public void winScreens(){
+    String playerWin = ("Game Over, Pac-Man Wins");
+    String ghostWin = ("Game Over, Ghost Wins");
+    if(pelletsEaten == 236){
+      fill(255, 255, 0);
+      textSize(15);
+      text(playerWin, 130, 615);
+    }else if(lifeCount <= 0){
+      fill(255, 0, 0);
+      textSize(15);
+      text(ghostWin, 130, 615);
     }
   }
 }
