@@ -108,7 +108,7 @@ public class Sketch1 extends PApplet {
     // score system
     
     fill(250);
-    text("Score: ", 10, 10);
+    text("Score: ", 10, 15);
 
     if (player1X > pelletX - 15 && player1X < pelletX + 15 && player1Y > pelletY - 15 && player1Y < pelletY + 15){
     score += 100;

@@ -20,8 +20,10 @@ public class Sketch2 extends PApplet {
   
   int player1Direction = 0;
   int player1NextDirection = 0;
-  int player2Direction = 0;
-  int player2NextDirection = 0;
+  char player2Direction = ' ';
+  char player2NextDirection = ' ';
+
+  int timer = 0;
 
   
   /**
@@ -44,10 +46,16 @@ public class Sketch2 extends PApplet {
    * Called repeatedly, anything drawn to the screen goes here
    */
   public void draw() {
+    timer ++;
+    System.out.println(timer);
     background(0);
     drawBoard();
     player1();
     player2();
+    //ghost();
+
+    fill(250);
+    text("Score: ", 10, 15);
     
   }
   
@@ -79,11 +87,7 @@ public class Sketch2 extends PApplet {
       }
     }
   }
-    
   
-   
-
-
   public void drawBoard() {
     for (int y = 0; y < intlevel.length; y++) {
       for (int x = 0; x < intlevel[0].length; x++) {
@@ -108,6 +112,16 @@ public class Sketch2 extends PApplet {
         } else if (code == 5) {
           //portal 2
         }
+        else if(code == 6) {
+          fill(255, 75, 0);
+          ellipse(x * playerSize + playerSize / 2, y * playerSize + playerSize / 2, 10, 10);
+        }
+        //spawns bonus fruit after specific amount of time
+        if(timer >= 800 && timer <= 801){
+          intlevel[23][9] = 6;
+        }else if(timer>= 1200){
+          intlevel[23][9] = 0;
+        }
       }
     }
   }
@@ -128,7 +142,7 @@ public class Sketch2 extends PApplet {
       {1,2,2,2,2,2,2,2,2,1,1,2,2,2,2,2,2,2,2,1},
       {1,2,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1},
       {1,2,1,1,1,1,1,1,2,1,1,2,1,1,1,1,1,1,2,1},
-      {4,2,2,3,2,2,1,1,2,1,1,2,1,1,2,2,3,2,2,5},
+      {1,2,2,3,2,2,1,1,2,1,1,2,1,1,2,2,3,2,2,1},
       {1,2,1,1,1,2,2,2,2,2,2,2,2,2,2,1,1,1,2,1},
       {1,2,1,2,2,2,1,1,1,1,1,1,1,1,2,2,2,1,2,1},
       {1,2,1,2,1,2,1,1,1,1,1,1,1,1,2,1,2,1,2,1},
@@ -149,7 +163,7 @@ public class Sketch2 extends PApplet {
   public void player1(){
     int player1GridX = player1X / playerSize;
     int player1GridY = player1Y / playerSize;
-    if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3){
+    if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3 || intlevel[player1GridY][player1GridX] == 6){
       //TODO add to player score
       intlevel[player1GridY][player1GridX] = 0;
     }
@@ -166,7 +180,6 @@ public class Sketch2 extends PApplet {
 
       if (player1NextDirection != 0) {
         // Draw a box around the current player 1 cell.
-        // TODO remove this. For debugging only.
         stroke(255);
         rect(player1GridX * playerSize, player1GridY * playerSize, playerSize, playerSize);
         stroke(0);
@@ -237,7 +250,7 @@ public class Sketch2 extends PApplet {
   public void player2(){
     int player2GridX = player2X / playerSize;
     int player2GridY = player2Y / playerSize;
-    if(intlevel[player2GridY][player2GridX] == 2 || intlevel[player2GridY][player2GridX] == 3){
+    if(intlevel[player2GridY][player2GridX] == 2 || intlevel[player2GridY][player2GridX] == 3 || intlevel[player2GridY][player2GridX] == 6){
       //TODO add to player score
       intlevel[player2GridY][player2GridX] = 0;
     }
@@ -252,22 +265,22 @@ public class Sketch2 extends PApplet {
       // TODO Can also check here if a pellet is available.
       // TODO Portal handling
 
-      if (player2NextDirection != 0) {
+      if (player2NextDirection != ' ') {
         // Draw a box around the current player 2 cell.
-        // TODO remove this. For debugging only.
         stroke(255);
+        fill(0);
         rect(player2GridX * playerSize, player2GridY * playerSize, playerSize, playerSize);
         stroke(0);
 
         nextX = player2GridX;
         nextY = player2GridY;
-        if (player2NextDirection == UP) {
+        if (player2NextDirection == 'w') {
           nextY--;
-        } else if (player2NextDirection == DOWN) {
+        } else if (player2NextDirection == 's') {
           nextY++;
-        } else if (player2NextDirection == LEFT) {
+        } else if (player2NextDirection == 'a') {
           nextX--;
-        } else if (player2NextDirection == RIGHT) {
+        } else if (player2NextDirection == 'd') {
           nextX++;
         }
 
@@ -281,32 +294,32 @@ public class Sketch2 extends PApplet {
       // Check if there is a wall in the player's way.
       nextX = player2GridX;
       nextY = player2GridY;
-      if (player2Direction == UP) {
+      if (player2Direction == 'w') {
         nextY--;
-      } else if (player2Direction == DOWN) {
+      } else if (player2Direction == 's') {
         nextY++;
-      } else if (player2Direction == LEFT) {
+      } else if (player2Direction == 'a') {
         nextX--;
-      } else if (player2Direction == RIGHT) {
+      } else if (player2Direction == 'd') {
         nextX++;
       }
 
       code = intlevel[nextY][nextX];
       if (code == 1) {
         // A wall.
-        player2Direction = 0;
+        player2Direction = ' ';
       }
     }
         
-    if (player2Direction != 0) {
+    if (player2Direction != ' ') {
       // Update the player position according to the direction.
-      if (player2Direction == UP) {
+      if (player2Direction == 'w') {
         player2Y--;
-      } else if (player2Direction == DOWN) {
+      } else if (player2Direction == 's') {
         player2Y++;
-      } else if (player2Direction == LEFT) {
+      } else if (player2Direction == 'a') {
         player2X--;
-      } else if (player2Direction == RIGHT) {
+      } else if (player2Direction == 'd') {
         player2X++;
       }
     }
@@ -320,5 +333,11 @@ public class Sketch2 extends PApplet {
     }else if(player2X >= width + 10){
       player2X = -10;
     }
+  }
+  public void ghost(){
+    int ghostX = 200;
+    int ghostY = 80;
+    fill(255, 0, 0);
+    rect(ghostX, ghostY, playerSize, playerSize);
   }
 }
