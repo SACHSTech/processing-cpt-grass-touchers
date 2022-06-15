@@ -194,13 +194,13 @@ public class Sketch2 extends PApplet {
         nextX = player1GridX;
         nextY = player1GridY;
         if (player1NextDirection == UP) {
-          nextY--;
+          nextY-=0.9;
         } else if (player1NextDirection == DOWN) {
-          nextY++;
+          nextY+=0.9;
         } else if (player1NextDirection == LEFT) {
-          nextX--;
+          nextX-=0.9;
         } else if (player1NextDirection == RIGHT) {
-          nextX++;
+          nextX+=0.9;
         }
 
         code = intlevel[nextY][nextX];
@@ -234,13 +234,13 @@ public class Sketch2 extends PApplet {
     if (player1Direction != 0) {
       // Update the player position according to the direction.
       if (player1Direction == UP) {
-        player1Y-= 0.9;
+        player1Y--;
       } else if (player1Direction == DOWN) {
-        player1Y+= 0.9;
+        player1Y++;
       } else if (player1Direction == LEFT) {
-        player1X-= 0.9;
+        player1X--;
       } else if (player1Direction == RIGHT) {
-        player1X+= 0.9;
+        player1X++;
       }
     }
     
@@ -317,21 +317,20 @@ public class Sketch2 extends PApplet {
         
     if (ghostDirection != ' ') {
       // Update the player position according to the direction.
-      if (ghostDirection == 'w') {
-        ghostY--;
+      if(ghostDirection == 'w') {
+        ghostY-= 1;
       } else if (ghostDirection == 's') {
-        ghostY++;
+        ghostY+= 1;
       } else if (ghostDirection == 'a') {
-        ghostX--;
+        ghostX-= 1;
       } else if (ghostDirection == 'd') {
-        ghostX++;
+        ghostX+= 1;
       }
     }
 
     //tracks how long a ghost is edible for
     if(ghostWhite){
       whiteTimer--;
-      // System.out.println(whiteTimer);
       if(whiteTimer == 0){
         ghostWhite = false;
         whiteTimer = 400;
@@ -355,11 +354,11 @@ public class Sketch2 extends PApplet {
   public void playerCollision(){
     int playersDistanceX = (int)player1X - (int)ghostX;
     int playersDistanceY = (int)player1Y - (int)ghostY;
-    if(playersDistanceX >= -5 && playersDistanceX <= 5 && playersDistanceY >= -5 && playersDistanceY <= 5 && ghostWhite == true){
+    if(playersDistanceX >= -15 && playersDistanceX <= 15 && playersDistanceY >= -15 && playersDistanceY <= 15 && ghostWhite == true){
       ghostX = playerSize * 11 + playerSize / 2;
       ghostY = playerSize * 23 + playerSize / 2;
       ghostWhite = false;
-    }else if(playersDistanceX >= -5 && playersDistanceX <= 5 && playersDistanceY >= -5 && playersDistanceY <= 5 && ghostWhite == false){
+    }else if(playersDistanceX >= -15 && playersDistanceX <= 15 && playersDistanceY >= -15 && playersDistanceY <= 15 && ghostWhite == false){
       player1X = playerSize * 8 + playerSize / 2;
       player1Y = playerSize * 23 + playerSize / 2;
       ghostX = playerSize * 11 + playerSize / 2;
@@ -368,7 +367,6 @@ public class Sketch2 extends PApplet {
       intlevel[23][9] = 1;
       intlevel[23][10] = 1;
       lifeCount--;
-      System.out.println(lifeCount);
       ghostWhite = false;
     }
   }
