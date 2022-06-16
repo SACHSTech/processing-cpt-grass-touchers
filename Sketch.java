@@ -256,12 +256,6 @@ int playerSize = 20;
     
     fill(255,255, 0);
     ellipse(PacManX, PacManY, 20, 20);
-
-    if(PacManX <= -10){
-      PacManX = width + 10;
-    }else if(PacManX >= width + 10){
-      PacManX = -10;
-    }
   }
 
   public void ghost(){
@@ -346,12 +340,6 @@ int playerSize = 20;
     }else{
       fill(255, 0, 0);
       ellipse(ghostX, ghostY, 20, 20);
-    }
-
-    if(ghostX <= -10){
-      ghostX = width + 10;
-    }else if(ghostX >= width + 10){
-      ghostX = -10;
     }
   }
   

@@ -113,7 +113,7 @@ public class Sketch2 extends PApplet {
         int code = intlevel[y][x];
 
         if (code == 0) {
-          //empty
+          //empty space
         } else if (code == 1) {
           //wall
           fill(0, 0, 200);
@@ -133,7 +133,10 @@ public class Sketch2 extends PApplet {
     }
   }
 }
-  
+  /**
+  *Creates 20 by 30 grid for the map
+  *@return The grid and the the values of each x and y value
+  */
   public int[][] arrayValues() {
     return new int[][] {
       {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -171,6 +174,8 @@ public class Sketch2 extends PApplet {
   public void PacMan(){
     int PacManGridX = (int)PacManX / playerSize;
     int PacManGridY = (int)PacManY / playerSize;
+
+    //What happens when Pac-Man eats specific things on the map (i.e pellets disappearing and Pac-Man score increasing)
     if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3 || intlevel[PacManGridY][PacManGridX] == 4){
       if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3){
         pelletsEaten++;
@@ -180,7 +185,6 @@ public class Sketch2 extends PApplet {
         ghostWhite = true;
       }
       
-      //TODO add to player score
       intlevel[PacManGridY][PacManGridX] = 0;
     }
     
@@ -256,12 +260,6 @@ public class Sketch2 extends PApplet {
     
     fill(255,255, 0);
     ellipse(PacManX, PacManY, 20, 20);
-
-    if(PacManX <= -10){
-      PacManX = width + 10;
-    }else if(PacManX >= width + 10){
-      PacManX = -10;
-    }
   }
 
   public void ghost(){
@@ -345,7 +343,8 @@ public class Sketch2 extends PApplet {
         whiteTimer = 500;
       }
     }
-    
+
+    //tracks how long a ghost is edible for
     if(ghostWhite == true){
       fill(255);
       ellipse(ghostX, ghostY, 20, 20);
@@ -353,13 +352,9 @@ public class Sketch2 extends PApplet {
       fill(255, 0, 0);
       ellipse(ghostX, ghostY, 20, 20);
     }
-
-    if(ghostX <= -10){
-      ghostX = width + 10;
-    }else if(ghostX >= width + 10){
-      ghostX = -10;
-    }
   }
+
+  //checks what happens if both players collide
   public void playerCollision(){
     int playersDistanceX = (int)PacManX - (int)ghostX;
     int playersDistanceY = (int)PacManY - (int)ghostY;
@@ -379,6 +374,8 @@ public class Sketch2 extends PApplet {
       ghostWhite = false;
     }
   }
+
+  //shows how many lived Pac-Man has on screen
   public void lifeDisplay(){
      String lives = ("Lives");
     fill(255);
@@ -401,6 +398,7 @@ public class Sketch2 extends PApplet {
         ellipse(45, 640, 20, 20);
     }
   }
+  //displays which player has won at the end of the game
   public void winScreens(){
     String playerWin = ("Game Over, Pac-Man Wins");
     String ghostWin = ("Game Over, Ghost Wins");
