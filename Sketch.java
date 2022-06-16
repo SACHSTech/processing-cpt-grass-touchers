@@ -58,9 +58,6 @@ int playerSize = 20;
     lifeDisplay();
     pointDisplay();
     winScreens();
-
-    fill(250);
-    text("Score: ", 10, 15);
   }
   
   public void keyPressed(){
@@ -103,12 +100,13 @@ int playerSize = 20;
       intlevel[23][9] = 0;
     }
 
+    //nested loop that assigns grid values
     for (int y = 0; y < intlevel.length; y++) {
       for (int x = 0; x < intlevel[0].length; x++) {
         int code = intlevel[y][x];
 
         if (code == 0) {
-          //empty
+          //empty space
         } else if (code == 1) {
           //wall
           fill(0, 0, 200);
@@ -128,7 +126,11 @@ int playerSize = 20;
     }
   }
 }
-  
+
+  /**
+  *Creates 20 by 30 grid for the map
+  *@return The grid and the the values of each x and y value
+  */
   public int[][] arrayValues() {
     return new int[][] {
       {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
@@ -166,6 +168,8 @@ int playerSize = 20;
   public void PacMan(){
     int PacManGridX = (int)PacManX / playerSize;
     int PacManGridY = (int)PacManY / playerSize;
+
+    //What happens when Pac-Man eats specific things on the map
     if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3 || intlevel[PacManGridY][PacManGridX] == 4){
       if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3){
         pelletsEaten++;
@@ -193,14 +197,8 @@ int playerSize = 20;
     int nextY;
     int code;
     if (PacManXRem == 10 && PacManYRem == 10) {
-      // TODO Can also check here if a pellet is available.
-      // TODO Portal handling
-
+      
       if (PacManNextDirection != 0) {
-        // Draw a box around the current player 1 cell.
-        stroke(255);
-        rect(PacManGridX * playerSize, PacManGridY * playerSize, playerSize, playerSize);
-        stroke(0);
 
         nextX = PacManGridX;
         nextY = PacManGridY;
@@ -277,15 +275,8 @@ int playerSize = 20;
     int nextY;
     int code;
     if (ghostXRem == 10 && ghostYRem == 10) {
-      // TODO Can also check here if a pellet is available.
-      // TODO Portal handling
 
       if (ghostNextDirection != ' ') {
-        // Draw a box around the current player 2 cell.
-        stroke(255);
-        fill(0);
-        rect(ghostGridX * playerSize, ghostGridY * playerSize, playerSize, playerSize);
-        stroke(0);
 
         nextX = ghostGridX;
         nextY = ghostGridY;
@@ -347,7 +338,8 @@ int playerSize = 20;
         whiteTimer = 500;
       }
     }
-    
+
+    //change ghost colour depending on whether it can be eaten or not
     if(ghostWhite == true){
       fill(255);
       ellipse(ghostX, ghostY, 20, 20);
@@ -362,6 +354,8 @@ int playerSize = 20;
       ghostX = -10;
     }
   }
+  
+  //checks what happens if both players collide
   public void playerCollision(){
     int playersDistanceX = (int)PacManX - (int)ghostX;
     int playersDistanceY = (int)PacManY - (int)ghostY;
@@ -382,6 +376,7 @@ int playerSize = 20;
       ghostWhite = false;
     }
   }
+  //shows how many lived Pac-Man has on screen
   public void lifeDisplay(){
      String lives = ("Lives");
     fill(255);
@@ -404,6 +399,7 @@ int playerSize = 20;
         ellipse(45, 640, 20, 20);
     }
   }
+  //displays which player has won at the end of the game
   public void winScreens(){
     String playerWin = ("Game Over, Pac-Man Wins");
     String ghostWin = ("Game Over, Ghost Wins");
@@ -417,8 +413,9 @@ int playerSize = 20;
       text(ghostWin, 130, 615); 
     }
   }
+  //shows Pac-Man's total point count on screen
   public void pointDisplay(){
-    String PacManScore = ("Pac-Man Score: " + score);
+    String PacManScore = ("P1 Score: " + score);
     fill(255);
     textSize(20);
     text(PacManScore, 35, 675);
