@@ -3,8 +3,8 @@ import processing.core.PImage;
 
 public class Sketch extends PApplet {
 int playerSize = 20;
-  float player1X = playerSize * 8 + playerSize / 2;
-  float player1Y = playerSize * 23 + playerSize / 2;
+  float PacManX = playerSize * 8 + playerSize / 2;
+  float PacManY = playerSize * 23 + playerSize / 2;
   float ghostX = playerSize * 11 + playerSize / 2;
   float ghostY = playerSize * 23 + playerSize / 2;
 
@@ -12,14 +12,15 @@ int playerSize = 20;
   int gridY = 30;
   int[][] intlevel;
   
-  int player1Direction = 0;
-  int player1NextDirection = 0;
+  int PacManDirection = 0;
+  int PacManNextDirection = 0;
   char ghostDirection = ' ';
   char ghostNextDirection = ' ';
 
   int timer = 0;
   boolean ghostWhite;
   int whiteTimer = 500;
+  int score = 0;
 
   PImage imgCherry;
   int lifeCount = 3;
@@ -51,10 +52,11 @@ int playerSize = 20;
     //System.out.println(timer);
     background(0);
     drawBoard();
-    player1();
+    PacMan();
     ghost();
     playerCollision();
     lifeDisplay();
+    pointDisplay();
     winScreens();
 
     fill(250);
@@ -63,16 +65,16 @@ int playerSize = 20;
   
   public void keyPressed(){
     if (keyCode == UP || keyCode == DOWN || keyCode == LEFT || keyCode == RIGHT) {
-      player1NextDirection = keyCode;
+      PacManNextDirection = keyCode;
       // Check if the next direction is the opposite of the current
       // direction. If so, we can change the current direction immediately.
       if (
-        (player1Direction == UP && player1NextDirection == DOWN) ||
-        (player1Direction == DOWN && player1NextDirection == UP) ||
-        (player1Direction == LEFT && player1NextDirection == RIGHT) ||
-        (player1Direction == RIGHT && player1NextDirection == LEFT)
+        (PacManDirection == UP && PacManNextDirection == DOWN) ||
+        (PacManDirection == DOWN && PacManNextDirection == UP) ||
+        (PacManDirection == LEFT && PacManNextDirection == RIGHT) ||
+        (PacManDirection == RIGHT && PacManNextDirection == LEFT)
       ) {
-        player1Direction = player1NextDirection;
+        PacManDirection = PacManNextDirection;
       }
     }
     if(key == 'w' || key == 'a' || key == 's' || key == 'd') {
@@ -161,67 +163,74 @@ int playerSize = 20;
       {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     };
   }
-  public void player1(){
-    int player1GridX = (int)player1X / playerSize;
-    int player1GridY = (int)player1Y / playerSize;
-    if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3 || intlevel[player1GridY][player1GridX] == 4){
-      if(intlevel[player1GridY][player1GridX] == 2 || intlevel[player1GridY][player1GridX] == 3){
+  public void PacMan(){
+    int PacManGridX = (int)PacManX / playerSize;
+    int PacManGridY = (int)PacManY / playerSize;
+    if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3 || intlevel[PacManGridY][PacManGridX] == 4){
+      if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3){
         pelletsEaten++;
         System.out.println(pelletsEaten);
       }
-      if(intlevel[player1GridY][player1GridX] == 3){
+      if(intlevel[PacManGridY][PacManGridX] == 2){
+        score += 10;
+      }
+      if(intlevel[PacManGridY][PacManGridX] == 3){
         ghostWhite = true;
+        score += 50;
+      }
+            if(intlevel[PacManGridY][PacManGridX] == 4){
+        score += 100;
       }
       
       //TODO add to player score
-      intlevel[player1GridY][player1GridX] = 0;
+      intlevel[PacManGridY][PacManGridX] = 0;
     }
     
     // Only check if the direction can be changed if the player is close enough to the center of a cell.
-    int player1XRem = (int)player1X % playerSize;
-    int player1YRem = (int)player1Y % playerSize;
+    int PacManXRem = (int)PacManX % playerSize;
+    int PacManYRem = (int)PacManY % playerSize;
     int nextX;
     int nextY;
     int code;
-    if (player1XRem == 10 && player1YRem == 10) {
+    if (PacManXRem == 10 && PacManYRem == 10) {
       // TODO Can also check here if a pellet is available.
       // TODO Portal handling
 
-      if (player1NextDirection != 0) {
+      if (PacManNextDirection != 0) {
         // Draw a box around the current player 1 cell.
         stroke(255);
-        rect(player1GridX * playerSize, player1GridY * playerSize, playerSize, playerSize);
+        rect(PacManGridX * playerSize, PacManGridY * playerSize, playerSize, playerSize);
         stroke(0);
 
-        nextX = player1GridX;
-        nextY = player1GridY;
-        if (player1NextDirection == UP) {
+        nextX = PacManGridX;
+        nextY = PacManGridY;
+        if (PacManNextDirection == UP) {
           nextY-=0.9;
-        } else if (player1NextDirection == DOWN) {
+        } else if (PacManNextDirection == DOWN) {
           nextY+=0.9;
-        } else if (player1NextDirection == LEFT) {
+        } else if (PacManNextDirection == LEFT) {
           nextX-=0.9;
-        } else if (player1NextDirection == RIGHT) {
+        } else if (PacManNextDirection == RIGHT) {
           nextX+=0.9;
         }
 
         code = intlevel[nextY][nextX];
         if (code != 1) {
           // Not a wall.
-          player1Direction = player1NextDirection;
+          PacManDirection = PacManNextDirection;
         }
       }
 
       // Check if there is a wall in the player's way.
-      nextX = player1GridX;
-      nextY = player1GridY;
-      if (player1Direction == UP) {
+      nextX = PacManGridX;
+      nextY = PacManGridY;
+      if (PacManDirection == UP) {
         nextY--;
-      } else if (player1Direction == DOWN) {
+      } else if (PacManDirection == DOWN) {
         nextY++;
-      } else if (player1Direction == LEFT) {
+      } else if (PacManDirection == LEFT) {
         nextX--;
-      } else if (player1Direction == RIGHT) {
+      } else if (PacManDirection == RIGHT) {
         nextX++;
       }
 
@@ -229,31 +238,31 @@ int playerSize = 20;
       code = intlevel[nextY][nextX];
       if (code == 1) {
         // A wall.
-        player1Direction = 0;
+        PacManDirection = 0;
       }
     }
         
-    if (player1Direction != 0) {
+    if (PacManDirection != 0) {
       // Update the player position according to the direction.
-      if (player1Direction == UP) {
-        player1Y--;
-      } else if (player1Direction == DOWN) {
-        player1Y++;
-      } else if (player1Direction == LEFT) {
-        player1X--;
-      } else if (player1Direction == RIGHT) {
-        player1X++;
+      if (PacManDirection == UP) {
+        PacManY--;
+      } else if (PacManDirection == DOWN) {
+        PacManY++;
+      } else if (PacManDirection == LEFT) {
+        PacManX--;
+      } else if (PacManDirection == RIGHT) {
+        PacManX++;
       }
     }
     
     
     fill(255,255, 0);
-    ellipse(player1X, player1Y, 20, 20);
+    ellipse(PacManX, PacManY, 20, 20);
 
-    if(player1X <= -10){
-      player1X = width + 10;
-    }else if(player1X >= width + 10){
-      player1X = -10;
+    if(PacManX <= -10){
+      PacManX = width + 10;
+    }else if(PacManX >= width + 10){
+      PacManX = -10;
     }
   }
 
@@ -354,15 +363,16 @@ int playerSize = 20;
     }
   }
   public void playerCollision(){
-    int playersDistanceX = (int)player1X - (int)ghostX;
-    int playersDistanceY = (int)player1Y - (int)ghostY;
+    int playersDistanceX = (int)PacManX - (int)ghostX;
+    int playersDistanceY = (int)PacManY - (int)ghostY;
     if(playersDistanceX >= -15 && playersDistanceX <= 15 && playersDistanceY >= -15 && playersDistanceY <= 15 && ghostWhite == true){
       ghostX = playerSize * 11 + playerSize / 2;
       ghostY = playerSize * 23 + playerSize / 2;
+      score += 400;
       ghostWhite = false;
     }else if(playersDistanceX >= -15 && playersDistanceX <= 15 && playersDistanceY >= -15 && playersDistanceY <= 15 && ghostWhite == false){
-      player1X = playerSize * 8 + playerSize / 2;
-      player1Y = playerSize * 23 + playerSize / 2;
+      PacManX = playerSize * 8 + playerSize / 2;
+      PacManY = playerSize * 23 + playerSize / 2;
       ghostX = playerSize * 11 + playerSize / 2;
       ghostY = playerSize * 23 + playerSize / 2;
       timer = 0;
@@ -406,5 +416,11 @@ int playerSize = 20;
       textSize(15);
       text(ghostWin, 130, 615); 
     }
+  }
+  public void pointDisplay(){
+    String PacManScore = ("Pac-Man Score: " + score);
+    fill(255);
+    textSize(20);
+    text(PacManScore, 35, 675);
   }
 }
