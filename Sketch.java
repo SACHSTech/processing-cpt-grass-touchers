@@ -169,7 +169,7 @@ int playerSize = 20;
     int PacManGridX = (int)PacManX / playerSize;
     int PacManGridY = (int)PacManY / playerSize;
 
-    //What happens when Pac-Man eats specific things on the map
+    //What happens when Pac-Man eats specific things on the map (i.e pellets disappearing and Pac-Man score increasing)
     if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3 || intlevel[PacManGridY][PacManGridX] == 4){
       if(intlevel[PacManGridY][PacManGridX] == 2 || intlevel[PacManGridY][PacManGridX] == 3){
         pelletsEaten++;
