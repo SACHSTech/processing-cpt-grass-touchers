@@ -34,3 +34,5 @@ Controls
   - Down: S
   - Right: D
 
+  Do note that Pac-Man may abruptly stop out of nowhere when moving, making it harder to move.
+

@@ -242,6 +242,17 @@ int playerSize = 20;
         
     if (PacManDirection != 0) {
       // Update the player position according to the direction.
+      if(ghostWhite == true){
+        if (PacManDirection == UP) {
+        PacManY--;
+      } else if (PacManDirection == DOWN) {
+        PacManY++;
+      } else if (PacManDirection == LEFT) {
+        PacManX--;
+      } else if (PacManDirection == RIGHT) {
+        PacManX++;
+      }
+      }else if(ghostWhite == false){
       if (PacManDirection == UP) {
         PacManY--;
       } else if (PacManDirection == DOWN) {
@@ -251,6 +262,8 @@ int playerSize = 20;
       } else if (PacManDirection == RIGHT) {
         PacManX++;
       }
+      }
+
     }
     
     

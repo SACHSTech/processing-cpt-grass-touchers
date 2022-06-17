@@ -63,9 +63,6 @@ public class Sketch2 extends PApplet {
     playerCollision();
     lifeDisplay();
     winScreens();
-
-    fill(250);
-    text("Score: ", 10, 15);
   }
   
   public void keyPressed(){
